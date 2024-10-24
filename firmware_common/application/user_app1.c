@@ -92,7 +92,24 @@ Promises:
 */
 void UserApp1Initialize(void)
 {
+LedOff(BLUE0);
+LedOff(GREEN0);
+LedOff(RED0);
+
+LedOff(BLUE1);
+LedOff(GREEN1);
+LedOff(RED1);
+
+LedOff(BLUE2);
+LedOff(GREEN2);
+LedOff(RED2);
+
+LedOff(BLUE3);
+LedOff(GREEN3);
+LedOff(RED3);
+
   /* If good initialization, set state to Idle */
+  HEARTBEAT_OFF();
   if( 1 )
   {
     UserApp1_pfStateMachine = UserApp1SM_Idle;
@@ -140,7 +157,46 @@ State Machine Function Definitions
 /* What does this state do? */
 static void UserApp1SM_Idle(void)
 {
-     
+  static u16 u16Counter = U16_COUNTER_PERIOD_MS;
+  static u8 u8counter = 0;
+  static bool blink=FALSE;
+
+  static LedNameType u8colour[][3]={{RED0,0xfff,0xfff},
+                        {RED0,GREEN0,0xfff},
+                        {0xfff,GREEN0,0xfff},
+                        {0xfff,GREEN0,BLUE0},
+                        {0xfff,0xfff,BLUE0},
+                        {RED0,0xfff,BLUE0},
+                        {RED0,GREEN0,BLUE0}};
+  for(u8 i=0;i<12;i++){
+      LedOff((LedNameType)i);
+  }
+    u16Counter--;
+  if(u16Counter == 0){
+    u16Counter=U16_COUNTER_PERIOD_MS;
+  //LedToggle(BLUE0);
+    u8counter++;
+    if(u8counter==7){
+    u8counter=0;
+    }
+    if(blink==TRUE){
+      blink=FALSE;
+      HEARTBEAT_OFF();
+      }
+    else{
+      blink=TRUE;
+      HEARTBEAT_ON();  
+    }
+  }
+
+for(u8 i=0;i<3;i++){
+  for(u8 j=0;j<1;j++){
+  LedOn((u8colour[u8counter][i])+(j));
+  }
+}
+
+
+  
 } /* end UserApp1SM_Idle() */
      
 
