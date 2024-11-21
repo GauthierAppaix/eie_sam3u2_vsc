@@ -19,8 +19,9 @@ To start a new task using this user_app1 as a template:
 
 ------------------------------------------------------------------------------------------------------------------------
 GLOBALS
-- NONE
+*/
 
+/*
 CONSTANTS
 - NONE
 
@@ -90,8 +91,10 @@ Promises:
 - NONE
 
 */
+
 void UserApp1Initialize(void)
 {
+// #include <math.h>
 LedOff(BLUE0);
 LedOff(GREEN0);
 LedOff(RED0);
@@ -160,18 +163,19 @@ static void UserApp1SM_Idle(void)
   static u16 u16Counter = U16_COUNTER_PERIOD_MS;
   static u8 u8counter = 0;
   static bool blink=FALSE;
+  static float temp = 0;
 
-  static LedNameType u8colour[][3]={{RED0,0xfff,0xfff},
-                        {RED0,GREEN0,0xfff},
-                        {0xfff,GREEN0,0xfff},
-                        {0xfff,GREEN0,BLUE0},
-                        {0xfff,0xfff,BLUE0},
-                        {RED0,0xfff,BLUE0},
+  static LedNameType u8colour[][3]={{RED0,50,50},
+                        {RED0,GREEN0,50},
+                        {50,GREEN0,50},
+                        {50,GREEN0,BLUE0},
+                        {50,50,BLUE0},
+                        {RED0,50,BLUE0},
                         {RED0,GREEN0,BLUE0}};
-  for(u8 i=0;i<12;i++){
+  for(u8 i=0;i<13;i++){
       LedOff((LedNameType)i);
   }
-    u16Counter--;
+  u16Counter--;
   if(u16Counter == 0){
     u16Counter=U16_COUNTER_PERIOD_MS;
   //LedToggle(BLUE0);
@@ -189,12 +193,23 @@ static void UserApp1SM_Idle(void)
     }
   }
 
-for(u8 i=0;i<3;i++){
-  for(u8 j=0;j<1;j++){
-  LedOn((u8colour[u8counter][i])+(j));
-  }
-}
+/*for(u8 i=0;i<3;i++){
+  for(u8 j=0;j<4;j++){
 
+  LedOn((u8colour[u8counter][i])+(j));
+  
+  }
+}*/
+temp += 0.001;
+float test = sin(temp);
+PWMAudioSetFrequency(BUZZER1,1500*(test+1)); 
+
+if(IsButtonPressed(BUTTON0)){
+  PWMAudioOn(BUZZER1);
+}
+else{
+  PWMAudioOff(BUZZER1);
+}
 
   
 } /* end UserApp1SM_Idle() */
